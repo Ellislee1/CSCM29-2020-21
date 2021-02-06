@@ -47,10 +47,10 @@ public class AccountBalance {
     
     public Set<String> getUsers(){
 	return getAccountBalanceBase().keySet();
-    };    
+    };
 
-    
-    
+
+
 
     /** 
      * Adds an account for user with balance.
@@ -96,7 +96,7 @@ public class AccountBalance {
     public void setBalance(String user, int amount){
 	accountBalanceBase.put(user,amount);
 	    };
-	
+
 
     /** 
      *  Adds amount to balance for {@code user}
@@ -158,12 +158,13 @@ public class AccountBalance {
      * 
      */    
 
-    /*
+
     public boolean checkAccountBalanceDeductable(AccountBalance accountBalance2){
-	// fill in Body 
+        System.out.println("Test");
+        return false;
     };
-    */
-    
+
+
     /** 
      *
      *  Task 2: Fill in the method checkTxELdeductable 
@@ -242,7 +243,7 @@ public class AccountBalance {
     public void processTx(Tx tx){
 	// fill in Body 
     };
-    
+
 
     /** 
      * Prints the current state of the accountBalance. 
@@ -264,7 +265,35 @@ public class AccountBalance {
      */
     
     public static void test() {
-	// fill in Body 
+        // Create accounts
+	    AccountBalance accounts = new AccountBalance();
+        // Add users to those accounts
+        System.out.println("----- Add users -----");
+	    accounts.addAccount("Alice",0);
+        accounts.addAccount("Bob",0);
+        accounts.addAccount("Carol",0);
+        accounts.addAccount("David",0);
+        // Output Users
+        accounts.print();
+        System.out.println("\n");
+
+        // Set balance for Alice to 20
+        System.out.println("----- Set balance for Alice to 20 -----");
+        accounts.setBalance("Alice",20);
+        accounts.print();
+        System.out.println("\n");
+
+        // Set balance for Bob to 15
+        System.out.println("----- Set balance for Bob to 15 -----");
+        accounts.setBalance("Bob",15);
+        accounts.print();
+        System.out.println("\n");
+
+        // Subtract 5 from Bob
+        System.out.println("----- Subtract 5 from Bob -----");
+        accounts.subtractBalance("Bob",5);
+        accounts.print();
+        System.out.println("\n");
     }
     
     /** 
