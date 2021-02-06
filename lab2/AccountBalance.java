@@ -234,11 +234,11 @@ public class AccountBalance {
      *
      */    
 
-    /*
+
     public boolean checkTxValid(Tx tx){
-	// fill in Body 		
+	    return tx.checkTxAmountsValid() & checkTxELdeductable(tx.toInputs());
     };
-    */
+
 
     /** 
      *
@@ -251,7 +251,10 @@ public class AccountBalance {
      */    
     
     public void processTx(Tx tx){
-	// fill in Body 
+        if (checkTxValid(tx)){
+            subtractTxEL(tx.toInputs());
+            addTxEL(tx.toOutputs());
+        }
     };
 
 
@@ -338,7 +341,7 @@ public class AccountBalance {
 
         // Check Transaction tx1 is valid
         System.out.println("----- Check Tx1 is valid -----");
-        System.out.println(tx1.checkTxAmountsValid());
+        System.out.println(accounts.checkTxValid(tx1));
         System.out.println("\n");
 
         // Create Transaction tx2
@@ -348,7 +351,7 @@ public class AccountBalance {
 
         // Check Transaction tx2 is valid
         System.out.println("----- Check Tx2 is valid -----");
-        System.out.println(tx2.checkTxAmountsValid());
+        System.out.println(accounts.checkTxValid(tx2));
         System.out.println("\n");
 
         // Create Transaction tx3
@@ -358,16 +361,13 @@ public class AccountBalance {
 
         // Check Transaction tx3 is valid
         System.out.println("----- Check Tx3 is valid -----");
-        System.out.println(tx3.checkTxAmountsValid());
+        System.out.println(accounts.checkTxValid(tx3));
         System.out.println("\n");
 
         // Run tx3
         System.out.println("----- Run Tx3 -----");
-        // Set Alice's balance to 25
-        accounts.setBalance("Alice",25);
         // Subtract inputs
-        accounts.subtractTxEL(tx3.toInputs());
-        accounts.addTxEL(tx3.toOutputs());
+        accounts.processTx(tx3);
         accounts.print();
         System.out.println("\n");
 
@@ -379,9 +379,7 @@ public class AccountBalance {
         // Run Transaction tx4
         System.out.println("----- Run Transaction Tx4 -----");
         // Set Alice's to 10
-        accounts.setBalance("Alice",10);
-        accounts.subtractTxEL(tx4.toInputs());
-        accounts.addTxEL(tx4.toOutputs());
+        accounts.processTx(tx4);
         accounts.print();
         System.out.println("\n");
 
