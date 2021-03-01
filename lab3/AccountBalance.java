@@ -377,6 +377,16 @@ public class AccountBalance {
         accounts.subtractTxInputList(txil1);
         System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
         System.out.println("B1: "+ accounts.getBalance(bobWallet.getPublicKey("B1")));
+
+        // =========================== CASE 11 ===========================
+        // TxInputList txol1= txil2
+        System.out.println("\n========== Test 11 ==========\n");
+        System.out.println("Creating txol1");
+        TxOutputList txol1 = new TxOutputList(aliceWallet.getPublicKey("A1"),15,aliceWallet.getPublicKey("A1"),15);
+        System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
+        System.out.println("Adding txol1");
+        accounts.addTxOutputList(txol1);
+        System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
     }
 
     /** 

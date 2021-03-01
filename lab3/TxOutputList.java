@@ -118,7 +118,7 @@ public class TxOutputList{
 
 
     /** 
-     * Create the message to be signed, if the outpupt is the current TxOutputList
+     * Create the message to be signed, if the output is the current TxOutputList
      *    and the sender and amount are the inputs
      *
      *  Note that the sender signs his input and all outputs
