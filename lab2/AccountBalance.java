@@ -276,7 +276,6 @@ public class AccountBalance {
      *    
      * Testcase
      */
-    
     public static void test() {
         // Create accounts
 	    AccountBalance accounts = new AccountBalance();
@@ -286,6 +285,8 @@ public class AccountBalance {
         accounts.addAccount("Bob",0);
         accounts.addAccount("Carol",0);
         accounts.addAccount("David",0);
+
+
         // Output Users
         accounts.print();
         System.out.println("\n");
