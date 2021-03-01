@@ -340,6 +340,43 @@ public class AccountBalance {
         accounts.subtractFromBalance(bobWallet.getPublicKey("B1"),5);
         System.out.println("B1: "+ accounts.getBalance(bobWallet.getPublicKey("B1")));
 
+        // =========================== CASE 7 ===========================
+        // Set the balance for C1 to 10.
+        System.out.println("\n========== Test 7 ==========\n");
+
+        accounts.setBalance(carolWallet.getPublicKey("C1"),10);
+        System.out.println("C1: "+ accounts.getBalance(carolWallet.getPublicKey("C1")));
+
+        // =========================== CASE 8 ===========================
+        // TxInputList txil1
+        System.out.println("\n========== Test 8 ==========\n");
+
+        byte[] exampleMessage1 = KeyUtils.integer2ByteArray(1);
+        byte[] exampleMessage2 = KeyUtils.integer2ByteArray(2);
+
+        TxInputList txil1 = new TxInputList(aliceWallet.getPublicKey("A1"),15,aliceWallet.signMessage(exampleMessage1,"A1"));
+        txil1.addEntry(bobWallet.getPublicKey("B1"),5,bobWallet.signMessage(exampleMessage2,"B1"));
+
+        System.out.println(accounts.checkTxInputListCanBeDeducted(txil1));
+
+        // =========================== CASE 9 ===========================
+        // TxInputList txil2
+        System.out.println("\n========== Test 9 ==========\n");
+
+        TxInputList txil2 = new TxInputList(aliceWallet.getPublicKey("A1"),15,aliceWallet.signMessage(exampleMessage1,"A1"));
+        txil2.addEntry(aliceWallet.getPublicKey("A1"),15,aliceWallet.signMessage(exampleMessage2,"A1"));
+
+        System.out.println(accounts.checkTxInputListCanBeDeducted(txil2));
+
+        // =========================== CASE 10 ===========================
+        // Subtract txil1
+        System.out.println("\n========== Test 10 ==========\n");
+        System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
+        System.out.println("B1: "+ accounts.getBalance(bobWallet.getPublicKey("B1")));
+        System.out.println("Subtracting txil1");
+        accounts.subtractTxInputList(txil1);
+        System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
+        System.out.println("B1: "+ accounts.getBalance(bobWallet.getPublicKey("B1")));
     }
 
     /** 
