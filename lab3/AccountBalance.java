@@ -300,6 +300,45 @@ public class AccountBalance {
 
         System.out.println(keyMap.getUsers());
 
+        // =========================== CASE 3 ===========================
+        // Create empty Account Balance
+        System.out.println("\n========== Test 3 ==========\n");
+
+        AccountBalance accounts = new AccountBalance();
+
+        for(String user:keyMap.getUsers()) {
+            accounts.addAccount(keyMap.getPublicKey(user), 0);
+        }
+
+        System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
+        System.out.println("A2: "+ accounts.getBalance(aliceWallet.getPublicKey("A2")));
+        System.out.println("B1: "+ accounts.getBalance(bobWallet.getPublicKey("B1")));
+        System.out.println("B2: "+ accounts.getBalance(bobWallet.getPublicKey("B2")));
+        System.out.println("C1: "+ accounts.getBalance(carolWallet.getPublicKey("C1")));
+        System.out.println("C2: "+ accounts.getBalance(carolWallet.getPublicKey("C2")));
+        System.out.println("C3: "+ accounts.getBalance(carolWallet.getPublicKey("C3")));
+        System.out.println("D1: "+ accounts.getBalance(davidWallet.getPublicKey("D1")));
+
+        // =========================== CASE 4 ===========================
+        // Set the balance for A1 to 20
+        System.out.println("\n========== Test 4 ==========\n");
+
+        accounts.setBalance(aliceWallet.getPublicKey("A1"),20);
+        System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
+
+        // =========================== CASE 5 ===========================
+        // Add 15 to the balance for B1
+        System.out.println("\n========== Test 5 ==========\n");
+
+        accounts.addToBalance(bobWallet.getPublicKey("B1"),15);
+        System.out.println("B1: "+ accounts.getBalance(bobWallet.getPublicKey("B1")));
+
+        // =========================== CASE 6 ===========================
+        // Subtract 5 from the balance for B1.
+        System.out.println("\n========== Test 6 ==========\n");
+
+        accounts.subtractFromBalance(bobWallet.getPublicKey("B1"),5);
+        System.out.println("B1: "+ accounts.getBalance(bobWallet.getPublicKey("B1")));
 
     }
 
