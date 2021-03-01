@@ -47,10 +47,10 @@ public class AccountBalance {
     
     public Set<String> getUsers(){
 	return getAccountBalanceBase().keySet();
-    };    
+    };
 
-    
-    
+
+
 
     /** 
      * Adds an account for user with balance.
@@ -96,7 +96,7 @@ public class AccountBalance {
     public void setBalance(String user, int amount){
 	accountBalanceBase.put(user,amount);
 	    };
-	
+
 
     /** 
      *  Adds amount to balance for {@code user}
@@ -161,30 +161,14 @@ public class AccountBalance {
      *    AccountBalance to check whether it can be deducted.
      */    
 
-    /*
-    public boolean checkAccountBalanceDeductable(AccountBalance amountToCheckForDeduction){
-	// fill in Body 
+    public boolean checkAccountBalanceDeductable(AccountBalance accountBalance2){
+        for (String user:accountBalance2.getUsers()) {
+            if (!checkBalance(user, accountBalance2.getBalance(user))){
+                return false;
+            }
+        }
+        return true;
     };
-    */
-    
-    /** 
-     *
-     *  Task 2: Fill in the method checkTxELdeductable 
-     *          It has been commented out so that the code compiles.
-     *
-     *  It checks that a list of txEntries (which will be inputs of a transactions)
-     *     can be deducted from AccountBalance
-     *
-     *   done by first converting the list of txEntries into an accountBalance
-     *     and then checking that the resulting accountBalance can be deducted.
-     *   
-     */    
-
-    /*     
-    public boolean checkTxELdeductable(TxEntryList txel){
-	// fill in Body 
-    };
-    */
     
     
     /** 
@@ -198,7 +182,12 @@ public class AccountBalance {
     
     
     public void subtractTxEL(TxEntryList txel){
-	// fill in Body 
+	    if (checkTxELdeductable(txel)){
+	        AccountBalance txelAccount = txel.toAccountBalance();
+	        for (String user:txelAccount.getUsers()){
+	            subtractBalance(user,txelAccount.getBalance(user));
+            }
+        }
     }
 
     
@@ -211,7 +200,10 @@ public class AccountBalance {
      */    
 
        public void addTxEL(TxEntryList txel){
-	   // fill in Body 
+           AccountBalance txelAccount = txel.toAccountBalance();
+           for (String user:txelAccount.getUsers()){
+               addBalance(user,txelAccount.getBalance(user));
+           }
        }
 
 
@@ -226,11 +218,11 @@ public class AccountBalance {
      *
      */    
 
-    /*
+
     public boolean checkTxValid(Tx tx){
-	// fill in Body 		
+	    return tx.checkTxAmountsValid() & checkTxELdeductable(tx.toInputs());
     };
-    */
+
 
     /** 
      *
@@ -243,9 +235,12 @@ public class AccountBalance {
      */    
     
     public void processTx(Tx tx){
-	// fill in Body 
+        if (checkTxValid(tx)){
+            subtractTxEL(tx.toInputs());
+            addTxEL(tx.toOutputs());
+        }
     };
-    
+
 
     /** 
      * Prints the current state of the accountBalance. 
@@ -265,9 +260,115 @@ public class AccountBalance {
      *    
      * Testcase
      */
-    
     public static void test() {
-	// fill in Body 
+        // Create accounts
+	    AccountBalance accounts = new AccountBalance();
+        // Add users to those accounts
+        System.out.println("----- Add users -----");
+	    accounts.addAccount("Alice",0);
+        accounts.addAccount("Bob",0);
+        accounts.addAccount("Carol",0);
+        accounts.addAccount("David",0);
+
+
+        // Output Users
+        accounts.print();
+        System.out.println("\n");
+
+        // Set balance for Alice to 20
+        System.out.println("----- Set balance for Alice to 20 -----");
+        accounts.setBalance("Alice",20);
+        accounts.print();
+        System.out.println("\n");
+
+        // Set balance for Bob to 15
+        System.out.println("----- Set balance for Bob to 15 -----");
+        accounts.setBalance("Bob",15);
+        accounts.print();
+        System.out.println("\n");
+
+        // Subtract 5 from Bob
+        System.out.println("----- Subtract 5 from Bob -----");
+        accounts.subtractBalance("Bob",5);
+        accounts.print();
+        System.out.println("\n");
+
+        // TxEntryList1
+        System.out.println("----- TxEntryList1 -----");
+        TxEntryList txel1 = new TxEntryList("Alice",15,"Bob",5);
+        txel1.print();
+        System.out.println(accounts.checkTxELdeductable(txel1));
+        System.out.println("\n");
+
+        // TxEntryList2
+        System.out.println("----- TxEntryList2 -----");
+        TxEntryList txel2 = new TxEntryList("Alice",15,"Alice",15);
+        txel2.print();
+        System.out.println(accounts.checkTxELdeductable(txel2));
+        System.out.println("\n");
+
+        // Subtract transaction1
+        System.out.println("----- Subtract transaction1 -----");
+        accounts.subtractTxEL(txel1);
+        accounts.print();
+        System.out.println("\n");
+
+        // Add transaction2
+        System.out.println("----- Add transaction2 -----");
+        accounts.addTxEL(txel2);
+        accounts.print();
+        System.out.println("\n");
+
+        // Create Transaction tx1
+        System.out.println("----- Create Transaction Tx1 -----");
+        Tx tx1 = new Tx(new TxEntryList("Alice",40),new TxEntryList("Bob",5,"Carol",
+                20));
+
+        // Check Transaction tx1 is valid
+        System.out.println("----- Check Tx1 is valid -----");
+        System.out.println(accounts.checkTxValid(tx1));
+        System.out.println("\n");
+
+        // Create Transaction tx2
+        System.out.println("----- Create Transaction Tx2 -----");
+        Tx tx2 = new Tx(new TxEntryList("Alice",20),new TxEntryList("Bob",5,"Carol",
+                20));
+
+        // Check Transaction tx2 is valid
+        System.out.println("----- Check Tx2 is valid -----");
+        System.out.println(accounts.checkTxValid(tx2));
+        System.out.println("\n");
+
+        // Create Transaction tx3
+        System.out.println("----- Create Transaction Tx3 -----");
+        Tx tx3= new Tx(new TxEntryList("Alice",25),new TxEntryList("Bob",5,"Carol",
+                20));
+
+        // Check Transaction tx3 is valid
+        System.out.println("----- Check Tx3 is valid -----");
+        System.out.println(accounts.checkTxValid(tx3));
+        System.out.println("\n");
+
+        // Run tx3
+        System.out.println("----- Run Tx3 -----");
+        // Subtract inputs
+        accounts.processTx(tx3);
+        accounts.print();
+        System.out.println("\n");
+
+        // Create Transaction tx4
+        System.out.println("----- Create Transaction Tx4 -----");
+        Tx tx4 = new Tx(new TxEntryList("Alice",5, "Alice",5),new TxEntryList("Bob",
+                10));
+
+        // Run Transaction tx4
+        System.out.println("----- Run Transaction Tx4 -----");
+        // Set Alice's to 10
+        accounts.processTx(tx4);
+        accounts.print();
+        System.out.println("\n");
+
+
     }
     
     /** 
