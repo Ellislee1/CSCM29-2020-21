@@ -219,7 +219,7 @@ public class AccountBalance {
      *  Task 4 Check a transaction is valid.
      *
      *  this means that 
-     *    the sum of outputs is less than the sum of inputs
+     *    the sum of outputs is less than or equal to the sum of inputs
      *    all signatures are valid
      *    and the inputs can be deducted from the accountBalance.
 
@@ -269,10 +269,9 @@ public class AccountBalance {
     public static void test()
 	throws NoSuchAlgorithmException, SignatureException, InvalidKeyException {
 
-	Wallet exampleWallet = SampleWallet.generate(new String[]{ "Alice"});
-	byte[] exampleMessage = KeyUtils.integer2ByteArray(1);
-	byte[] exampleSignature = exampleWallet.signMessage(exampleMessage,"Alice");
-
+//	Wallet exampleWallet = SampleWallet.generate(new String[]{ "Alice"});
+//	byte[] exampleMessage = KeyUtils.integer2ByteArray(1);
+//	byte[] exampleSignature = exampleWallet.signMessage(exampleMessage,"Alice");
 
 	/***   Task 5
                add  to the test case the test as described in the lab sheet
@@ -281,7 +280,27 @@ public class AccountBalance {
 	       which cannot be computed from the data.
 
 	**/
-	
+
+	    // =========================== CASE 1 ===========================
+        // Create a sample wallet for alice, bob, carol and david
+        System.out.println("\n========== Test 1 ==========\n");
+	    Wallet aliceWallet = SampleWallet.generate(new String[] {"A1","A2"});
+        Wallet bobWallet = SampleWallet.generate(new String[] {"B1","B2"});
+        Wallet carolWallet = SampleWallet.generate(new String[] {"C1","C2","C3"});
+        Wallet davidWallet = SampleWallet.generate(new String[] {"D1"});
+
+        // =========================== CASE 2 ===========================
+        // Create the public key map
+        System.out.println("\n========== Test 2 ==========\n");
+        PublicKeyMap keyMap = new PublicKeyMap();
+        keyMap.addPublicKeyMap(aliceWallet.toPublicKeyMap());
+        keyMap.addPublicKeyMap(bobWallet.toPublicKeyMap());
+        keyMap.addPublicKeyMap(carolWallet.toPublicKeyMap());
+        keyMap.addPublicKeyMap(davidWallet.toPublicKeyMap());
+
+        System.out.println(keyMap.getUsers());
+
+
     }
 
     /** 

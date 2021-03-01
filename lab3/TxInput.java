@@ -125,9 +125,10 @@ public class TxInput{
     **/
 
     public boolean checkSignature(TxOutputList txol){
-	return true;
-	/* this is not the correct value, only used here so that the code
-	   compiles */
+        for(TxOutput entry: txol.toList()){
+            System.out.println(entry);
+        }
+	    return true;
     }
 
 
