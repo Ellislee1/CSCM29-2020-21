@@ -125,10 +125,7 @@ public class TxInput{
     **/
 
     public boolean checkSignature(TxOutputList txol){
-        for(TxOutput entry: txol.toList()){
-            System.out.println(entry);
-        }
-	    return true;
+        return this.toTxInputUnsigned().checkSignature(txol, this.getSignature());
     }
 
 

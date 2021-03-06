@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public class TxInputUnsigned{
 
-    /** The amount to be transfered  */
+    /** The amount to be transferred  */
     private int amount;
 
     /** The sender */

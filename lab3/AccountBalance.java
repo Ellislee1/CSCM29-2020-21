@@ -269,9 +269,9 @@ public class AccountBalance {
     public static void test()
 	throws NoSuchAlgorithmException, SignatureException, InvalidKeyException {
 
-//	Wallet exampleWallet = SampleWallet.generate(new String[]{ "Alice"});
-//	byte[] exampleMessage = KeyUtils.integer2ByteArray(1);
-//	byte[] exampleSignature = exampleWallet.signMessage(exampleMessage,"Alice");
+	Wallet exampleWallet = SampleWallet.generate(new String[]{ "Alice"});
+	byte[] exampleMessage = KeyUtils.integer2ByteArray(1);
+	byte[] exampleSignature = exampleWallet.signMessage(exampleMessage,"Alice");
 
 	/***   Task 5
                add  to the test case the test as described in the lab sheet
@@ -354,8 +354,9 @@ public class AccountBalance {
         byte[] exampleMessage1 = KeyUtils.integer2ByteArray(1);
         byte[] exampleMessage2 = KeyUtils.integer2ByteArray(2);
 
-        TxInputList txil1 = new TxInputList(aliceWallet.getPublicKey("A1"),15,aliceWallet.signMessage(exampleMessage1,"A1"));
-        txil1.addEntry(bobWallet.getPublicKey("B1"),5,bobWallet.signMessage(exampleMessage2,"B1"));
+        TxInputList txil1 = new TxInputList(aliceWallet.getPublicKey("A1"),15,
+                aliceWallet.signMessage(exampleMessage,"A1"));
+        txil1.addEntry(bobWallet.getPublicKey("B1"),5,bobWallet.signMessage(exampleMessage,"B1"));
 
         System.out.println(accounts.checkTxInputListCanBeDeducted(txil1));
 
@@ -363,8 +364,9 @@ public class AccountBalance {
         // TxInputList txil2
         System.out.println("\n========== Test 9 ==========\n");
 
-        TxInputList txil2 = new TxInputList(aliceWallet.getPublicKey("A1"),15,aliceWallet.signMessage(exampleMessage1,"A1"));
-        txil2.addEntry(aliceWallet.getPublicKey("A1"),15,aliceWallet.signMessage(exampleMessage2,"A1"));
+        TxInputList txil2 = new TxInputList(aliceWallet.getPublicKey("A1"),15,
+                aliceWallet.signMessage(exampleMessage,"A1"));
+        txil2.addEntry(aliceWallet.getPublicKey("A1"),15,aliceWallet.signMessage(exampleMessage,"A1"));
 
         System.out.println(accounts.checkTxInputListCanBeDeducted(txil2));
 
@@ -382,11 +384,34 @@ public class AccountBalance {
         // TxInputList txol1= txil2
         System.out.println("\n========== Test 11 ==========\n");
         System.out.println("Creating txol1");
-        TxOutputList txol1 = new TxOutputList(aliceWallet.getPublicKey("A1"),15,aliceWallet.getPublicKey("A1"),15);
+        TxOutputList txol1 = new TxOutputList(aliceWallet.getPublicKey("A1"),15,
+                aliceWallet.getPublicKey("A1"),15);
         System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
         System.out.println("Adding txol1");
         accounts.addTxOutputList(txol1);
         System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
+
+        // =========================== CASE 12 ===========================
+        // Correctly signed input
+        System.out.println("\n========== Test 12 ==========\n");
+        TxOutputList txop = new TxOutputList(bobWallet.getPublicKey("B2"),10,
+                carolWallet.getPublicKey("C1"),20);
+        byte[] message = txop.getMessageToSign(aliceWallet.getPublicKey("A1"),30);
+        byte[] signature = aliceWallet.signMessage(message,"A1");
+        TxInputList txin = new TxInputList(aliceWallet.getPublicKey("A1"),30,signature
+                );
+
+        System.out.println(txin.checkSignature(txop));
+
+        // =========================== CASE 13 ===========================
+        // Incorrectly signed input
+        System.out.println("\n========== Test 13 ==========\n");
+        TxOutputList txop2 = new TxOutputList(bobWallet.getPublicKey("B2"),10,
+                carolWallet.getPublicKey("C1"),20);
+        TxInputList txin2 = new TxInputList(aliceWallet.getPublicKey("A1"),30,exampleSignature
+        );
+
+        System.out.println(txin2.checkSignature(txop2));
     }
 
     /** 

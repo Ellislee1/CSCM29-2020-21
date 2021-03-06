@@ -233,9 +233,15 @@ public class TxInputList{
     **/
 
     public boolean checkSignature(TxOutputList txol){
-	return true;
-	/* this is not the correct value, only used here so that the code
-	   compiles */
+    	boolean valid = true;
+
+    	for(TxInput input: this.txInputList){
+    		if (valid){
+				valid = input.checkSignature(txol);
+			}
+		}
+
+    	return valid;
     }
 
 
