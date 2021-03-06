@@ -62,9 +62,7 @@ public class Transaction {
     */
     
     public boolean checkSignaturesValid(){
-	return true;
-	/* this is not the correct value, only used here so that the code
-	   compiles */
+    	return txInputs.checkSignature(txOutputs);
 	}
 
 	   

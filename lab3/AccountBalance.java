@@ -228,9 +228,17 @@ public class AccountBalance {
      */    
 
     public boolean checkTransactionValid(Transaction tx){
-	return true;
-	/* this is not the correct value, only used here so that the code
-	   compiles */
+        boolean flag = true;
+        // First Check signatures and amounts
+        if (tx.checkSignaturesValid() & tx.checkTransactionAmountsValid()){
+            // Check the amounts can be subtracted for each item
+            flag = checkAccountBalanceCanBeDeducted(tx.toTxInputs().toAccountBalance());
+
+
+        } else {
+            flag = false;
+        }
+        return flag;
     };
 
 
@@ -398,8 +406,7 @@ public class AccountBalance {
                 carolWallet.getPublicKey("C1"),20);
         byte[] message = txop.getMessageToSign(aliceWallet.getPublicKey("A1"),30);
         byte[] signature = aliceWallet.signMessage(message,"A1");
-        TxInputList txin = new TxInputList(aliceWallet.getPublicKey("A1"),30,signature
-                );
+        TxInputList txin = new TxInputList(aliceWallet.getPublicKey("A1"),30,signature);
 
         System.out.println(txin.checkSignature(txop));
 
@@ -412,6 +419,19 @@ public class AccountBalance {
         );
 
         System.out.println(txin2.checkSignature(txop2));
+
+        // =========================== CASE 14 ===========================
+        // Create Transaction
+        System.out.println("\n========== Test 14 ==========\n");
+        TxOutputList tx1_out = new TxOutputList(bobWallet.getPublicKey("B2"),10,
+                carolWallet.getPublicKey("C2"),10, aliceWallet.getPublicKey("A2"), 15);
+
+        byte[] tx1_message = txop.getMessageToSign(aliceWallet.getPublicKey("A1"),35);
+        byte[] tx1_signature = aliceWallet.signMessage(tx1_message,"A1");
+        TxInputList tx1_input = new TxInputList(aliceWallet.getPublicKey("A1"),35,tx1_signature);
+
+        Transaction tx1 = new Transaction(tx1_input,tx1_out);
+
     }
 
     /** 
