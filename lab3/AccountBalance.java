@@ -234,7 +234,6 @@ public class AccountBalance {
             // Check the amounts can be subtracted for each item
             flag = checkAccountBalanceCanBeDeducted(tx.toTxInputs().toAccountBalance());
 
-
         } else {
             flag = false;
         }
@@ -426,11 +425,76 @@ public class AccountBalance {
         TxOutputList tx1_out = new TxOutputList(bobWallet.getPublicKey("B2"),10,
                 carolWallet.getPublicKey("C2"),10, aliceWallet.getPublicKey("A2"), 15);
 
-        byte[] tx1_message = txop.getMessageToSign(aliceWallet.getPublicKey("A1"),35);
+        byte[] tx1_message = tx1_out.getMessageToSign(aliceWallet.getPublicKey("A1"),35);
         byte[] tx1_signature = aliceWallet.signMessage(tx1_message,"A1");
         TxInputList tx1_input = new TxInputList(aliceWallet.getPublicKey("A1"),35,tx1_signature);
 
         Transaction tx1 = new Transaction(tx1_input,tx1_out);
+
+        // =========================== CASE 15 ===========================
+        // Check Valid then process
+        System.out.println("\n========== Test 15 ==========\n");
+        System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
+        System.out.println("A2: "+ accounts.getBalance(aliceWallet.getPublicKey("A2")));
+        System.out.println("B2: "+ accounts.getBalance(bobWallet.getPublicKey("B2")));
+        System.out.println("C1: "+ accounts.getBalance(carolWallet.getPublicKey("C1")));
+        System.out.println("C2: "+ accounts.getBalance(carolWallet.getPublicKey("C2")));
+        System.out.println(accounts.checkTransactionValid(tx1));
+        if (accounts.checkTransactionValid(tx1)){
+            accounts.processTransaction(tx1);
+        }
+
+        System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
+        System.out.println("A2: "+ accounts.getBalance(aliceWallet.getPublicKey("A2")));
+        System.out.println("B2: "+ accounts.getBalance(bobWallet.getPublicKey("B2")));
+        System.out.println("C1: "+ accounts.getBalance(carolWallet.getPublicKey("C1")));
+        System.out.println("C2: "+ accounts.getBalance(carolWallet.getPublicKey("C2")));
+
+        // =========================== CASE 16 ===========================
+        // Create Transaction
+        System.out.println("\n========== Test 16 ==========\n");
+        TxOutputList tx2_out = new TxOutputList(davidWallet.getPublicKey("D1"),15,
+                carolWallet.getPublicKey("C3"),5);
+
+        byte[] tx2_message1 = tx2_out.getMessageToSign(bobWallet.getPublicKey("B2"),10);
+        byte[] tx2_signature1 = bobWallet.signMessage(tx2_message1,"B2");
+        byte[] tx2_message2 = tx2_out.getMessageToSign(carolWallet.getPublicKey("C2"),10);
+        byte[] tx2_signature2 = carolWallet.signMessage(tx2_message2,"C2");
+        TxInputList tx2_input = new TxInputList(bobWallet.getPublicKey("B2"),10,tx2_signature1,
+                carolWallet.getPublicKey("C2"),10,tx2_signature2 );
+
+        Transaction tx2 = new Transaction(tx2_input,tx2_out);
+
+        // =========================== CASE 17 ===========================
+        // Check Valid then process
+        System.out.println("\n========== Test 17 ==========\n");
+        System.out.println("B2: "+ accounts.getBalance(bobWallet.getPublicKey("B2")));
+        System.out.println("C2: "+ accounts.getBalance(carolWallet.getPublicKey("C2")));
+        System.out.println("C3: "+ accounts.getBalance(carolWallet.getPublicKey("C3")));
+        System.out.println("D1: "+ accounts.getBalance(davidWallet.getPublicKey("D1")));
+        System.out.println(accounts.checkTransactionValid(tx2));
+        if (accounts.checkTransactionValid(tx2)){
+            accounts.processTransaction(tx2);
+        }
+
+        System.out.println("B2: "+ accounts.getBalance(bobWallet.getPublicKey("B2")));
+        System.out.println("C2: "+ accounts.getBalance(carolWallet.getPublicKey("C2")));
+        System.out.println("C3: "+ accounts.getBalance(carolWallet.getPublicKey("C3")));
+        System.out.println("D1: "+ accounts.getBalance(davidWallet.getPublicKey("D1")));
+
+        // =========================== Final Values ===========================
+        // Final account values
+        System.out.println("\n======== Final Values ========\n");
+        System.out.println("A1: "+ accounts.getBalance(aliceWallet.getPublicKey("A1")));
+        System.out.println("A2: "+ accounts.getBalance(aliceWallet.getPublicKey("A2")));
+        System.out.println("B1: "+ accounts.getBalance(bobWallet.getPublicKey("B1")));
+        System.out.println("B2: "+ accounts.getBalance(bobWallet.getPublicKey("B2")));
+        System.out.println("C1: "+ accounts.getBalance(carolWallet.getPublicKey("C1")));
+        System.out.println("C2: "+ accounts.getBalance(carolWallet.getPublicKey("C2")));
+        System.out.println("C3: "+ accounts.getBalance(carolWallet.getPublicKey("C3")));
+        System.out.println("D1: "+ accounts.getBalance(davidWallet.getPublicKey("D1")));
+
+
 
     }
 
